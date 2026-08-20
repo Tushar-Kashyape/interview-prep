@@ -1,0 +1,164 @@
+Batch 1:
+=========
+
+# 1
+a = [1, 2, 3]
+b = a
+b.append(4)
+print(a)
+
+# 2
+c = a[:]
+c.append(5)
+print(a)
+print(c)
+
+# 3
+d = [[0]*2]*2
+d[0][0] = 9
+print(d)
+
+# 4
+def f(x, lst=[]):
+    lst.append(x)
+    return lst
+
+print(f(1))
+print(f(2))
+
+# 5
+nums = [1, 2, 3, 4, 5]
+for n in nums:
+    if n % 2 == 0:
+        nums.remove(n)
+print(nums)
+
+# 6
+a = [1, 2, 3]
+a += [4]
+b = a
+a = a + [5]
+print(b)
+
+
+Batch 2:
+=========
+
+# 1
+a = [1, 2, 3]
+b = a.copy()
+a.append(4)
+print(b)
+
+# 2
+a = [[1, 2], [3, 4]]
+b = a.copy()
+b[0].append(99)
+print(a)
+
+# 3
+a = [1, 2, 3]
+a.extend([4, 5])
+b = a
+a = [9, 9]
+print(b)
+
+# 4
+def f(lst=None):
+    if lst is None:
+        lst = []
+    lst.append(1)
+    return lst
+
+print(f())
+print(f())
+
+# 5
+a = [1, 2, 3]
+b = a[:]
+a[0] = 100
+print(b)
+
+# 6
+a = [1, 2]
+b = [3, 4]
+a.extend(b)
+b.append(5)
+print(a)
+
+
+Batch 3:
+========
+
+# 1
+a = [1, 2, 3, 4, 5]
+print(a[10])       # ?
+
+# 2
+a = [1, 2, 3, 4, 5]
+print(a[10:20])     # ?
+
+# 3
+a = [1, 2, 3, 4, 5]
+print(a[::-1])
+print(a)             # ?
+
+# 4
+a = [1, 2, 3, 4, 5]
+print(a[-2:])
+print(a[:-2])        # ?
+
+# 5
+a = [3, 1, 4, 1, 5]
+b = sorted(a)
+print(a)
+print(b)              # ?
+
+a.sort()
+print(a)               # ?
+
+# 6
+a = [3, 1, 4]
+b = a.sort()
+print(b)                # ?
+
+# 7
+a, b, *c = [1, 2, 3, 4, 5]
+print(a, b, c)            # ?
+
+*c, a, b = [1, 2, 3, 4, 5]
+print(a, b, c)              # ?
+
+# 8
+a = [1, 2, 3]
+a.append(4)      # treat 'a' as a stack now
+a.append(5)
+print(a.pop())      # ?
+print(a)              # ?
+
+
+Batch 4:
+=========
+
+# 1
+a = [3, 1, 2]
+b = a.reverse()
+print(b)
+print(a)
+
+# 2
+a = [1, 2, 3]
+print(a[5:])
+print(a[-100:])
+
+# 3
+a = [1, 2, 3]
+b = a.append(4)
+print(b)
+print(a)
+
+# 4
+a = [1, 2, 3, 4, 5]
+print(a[2:100])
+print(a[100:2])
+

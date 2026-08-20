@@ -1,0 +1,96 @@
+Batch 1:
+==========
+
+# Q1
+d = {"a": 1, "b": 2}
+d["c"]
+
+# Q2
+d = {"a": 1, "b": 2}
+print(d.get("c"))
+
+# Q3
+d = {True: "yes", 1: "no", 1.0: "maybe"}
+print(d)
+
+# Q4
+d = {}
+d.setdefault("x", []).append(1)
+d.setdefault("x", []).append(2)
+print(d)
+
+# Q5
+d1 = {"a": 1, "b": 2}
+d2 = {"b": 20, "c": 3}
+print(d1 | d2)
+print(d1)
+
+# Q6
+d = {"a": 1, "b": 2, "c": 3}
+for k in d:
+    if k == "b":
+        d["d"] = 4
+print(d)
+
+# Q7
+d = dict.fromkeys(["x", "y"], [])
+d["x"].append(100)
+print(d)
+
+# Q8
+d = {"a": 1, "b": 2}
+d2 = d.copy()
+d2["a"] = 99
+print(d, d2)
+
+
+Batch 2:
+========
+
+# Q1
+d = {"a": 1, "b": 2, "c": 3}
+d.popitem()
+print(d)
+
+# Q2
+d = {"a": 1}
+d.update({"a": 2}, a=3)
+print(d)
+
+# Q3
+d = {"a": 1, "b": 2}
+k = d.keys()
+del d["a"]
+print(k)
+
+# Q4
+d1 = {"a": 1, "b": 2}
+d2 = {"a": 10, "c": 3}
+print(d1.keys() & d2.keys())
+print(d1.items() & d2.items())
+
+# Q5
+d = {"a": 1, "b": 2, "c": 3}
+print(list(reversed(d)))
+
+# Q6
+d = {}
+try:
+    d["x"]
+except KeyError:
+    print("caught")
+finally:
+    print(d.get("x", "default"))
+
+# Q7
+d = {"a": [1, 2]}
+d2 = d.copy()
+d2["a"].append(3)
+print(d)
+
+# Q8
+n1 = float('nan')
+n2 = float('nan')
+d = {n1: "first"}
+print(n1 in d)
+print(n2 in d)

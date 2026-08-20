@@ -1,0 +1,104 @@
+Batch 1 — Tuple basics & immutability
+======================================
+
+# Q1
+t = (1, 2, 3)
+t[0] = 10
+print(t)
+
+# Q2
+t = (1, 2, [3, 4])
+t[2].append(5)
+print(t)
+
+# Q3
+t = (1, 2, 3)
+t += (4, 5)
+print(t)
+print(id(t))  # compared to id before += — same or different?
+
+# Q4
+t = (1)
+print(type(t))
+
+t2 = (1,)
+print(type(t2))
+
+
+Batch 2 — Tuple methods, packing/unpacking, in, slicing
+========================================================
+
+
+# Q1
+t = (1, 2, 3, 2, 1, 2)
+print(t.count(2))
+print(t.index(2))
+
+
+# Q2
+a, b, *c = (1, 2, 3, 4, 5)
+print(a, b, c)
+
+*x, y, z = (1, 2, 3, 4, 5)
+print(x, y, z)
+
+
+# Q3
+t1 = (1, 2, 3)
+t2 = (1, 2, 3)
+print(t1 == t2)
+print(t1 is t2)
+
+
+# Q4
+t = (1, 2, 3, 4, 5)
+print(t[1:4])
+print(t[::-1])
+print(t[10])
+
+# Q5
+def f():
+    return 1, 2, 3
+
+result = f()
+print(type(result))
+
+
+Batch 3 — nested tuples, +/* operators, hashability, membership, zip
+=====================================================================
+
+# Q1
+t = ((1, 2), (3, 4))
+print(t[0][1])
+print(t[1])
+
+
+# Q2
+t1 = (1, 2)
+t2 = (3, 4)
+print(t1 + t2)
+print(t1 * 3)
+
+
+# Q3
+t = (1, 2, 3)
+d = {}
+d[t] = "hello"
+print(d)
+
+t2 = (1, [2, 3])
+d[t2] = "world"
+
+
+# Q4
+t = (1, 2, 3, 4, 5)
+print(3 in t)
+print(10 not in t)
+
+
+# Q5
+names = ("Alice", "Bob")
+ages = (25, 30)
+zipped = tuple(zip(names, ages))
+print(zipped)
+
