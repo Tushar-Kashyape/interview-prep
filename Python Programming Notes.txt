@@ -1,0 +1,581 @@
+===========
+## STRINGS:
+===========
+
+. Python does not have a separate character type. Single character is treated as string of length one.
+. Strings are immutable, meaning their values cannot be changed after creation. Any modification to a string creates a new string instead of altering the original one.
+. Accessing an index out of range will cause an IndexError. Only integers are allowed as indices and using a float or other types will result in a TypeError.
+. After deleting a string, if we try to access it, Python raises a NameError because the variable no longer exists in memory.
+
+# Python String Methods:
+
+  . replace() method is used to replace a specified substring with another substring in a string. It returns a new string with the replacements applied, while the original string remains unchanged.
+  . string.replace(old, new, count) -> count - number of occurences to be replaced.. if not mentioned all
+  . replace() treats uppercase and lowercase characters as different, replacing only exact matches.
+
+  . strip() - removes leading and trailing whitespace from the string
+  . capitalize() - Converts the first character of the string to uppercase and the remaining characters to lowercase.
+  . split() - Splits a string into a list using the specified separator.
+    
+    text = "Python is easy"
+    print(text.split())
+
+    ['Python', 'is', 'easy']
+
+  . join() - Joins elements of an iterable into a single string.
+
+    Syntax: separator.join(iterable)
+
+    words = ["Python", "is", "easy"]
+    print("-".join(words))
+
+  . find() - Returns the index of the first occurrence of a substring. Returns -1 if the substring is not found.
+  . count() - Returns the number of times a substring appears in the string.
+  . startswith() - Checks whether a string starts with the specified prefix.
+  . Visit https://www.geeksforgeeks.org/python/python-string-methods/ for more.
+
+  . String concatenation -> using "+" and repetition -> using "*"
+
+# Formatting Strings:
+
+  . f-strings allows to directly insert variables and expressions inside a string using {} brackets.
+
+    name = "Jake"
+    age = 22
+    print(f"Name: {name}, Age: {age}")
+
+  . format() method allows inserting values into placeholders {} inside a string.
+
+    s = "My name is {} and I am {} years old.".format( "Emily", 22)
+    print(s)
+
+# String Comparison:
+
+  . several operators for string comparison... ==, !=, <, >, <=, >=
+  . == checks if two strings are identical.
+  . != checks if two strings differ.
+  . <, <=, >, >= perform lexicographical comparisons based on alphabetical order.
+
+# Int to String conversion:
+  . str() function/ f"{n}"/ using "{}".format(n)/ using "%s" % n
+
+# String to Int conversion:
+
+  . using int() - int() function automatically handles leading and trailing whitespaces, so int() function trims whitespaces and converts the core numeric part to an integer.
+  . Use str.isdigit() to check if a string is entirely numeric before converting. This method make sure that the input only contains digits. 
+
+# String to List conversion:
+
+  . split() method converts a string into a list by splitting it at a specified separator. If no separator is provided, it splits the string wherever it finds whitespace.
+  . list() function converts a string into a list by treating every character as a separate element. This includes letters, digits, punctuation marks, and even spaces.
+
+# Quick Notes- String Hands-on session:
+
+  . Slicing never errors, indexing does. s[10:], s[-100:100] etc. → Python clamps out-of-range slice bounds silently, returns '' if fully out of range. Only s[i] (single index) raises IndexError. True for lists too.
+  . Strings are immutable. s[0] = 'x' → TypeError. No item assignment, ever. Any "modification" (.replace(), .upper(), etc.) returns a new string.
+  . is keyword on strings — two different causes, don't conflate them:
+    . Short, identifier-like literals ("abc") → interned automatically → is often True.
+    . Longer literals with spaces → not interned, but if both appear as identical literals in the same code object, compile-time constant folding dedupes them → is still True, but this breaks the moment the string is built dynamically (input(), .join(), concatenation at runtime, etc.). Never rely on is for string equality — always use ==.
+
+  . .split(",") vs .split() — explicit separator keeps empty strings for consecutive delimiters ("a,,b".split(",") → ['a', '', 'b']); no-argument .split() collapses whitespace runs and drops empties entirely ("a  b".split() → ['a', 'b']). Easy to mix up. That's the only one worth a note; rest was clean.
+
+  . str.title(): capitalizes first letter of each "word," lowercases rest. Any non-letter char (apostrophe, hyphen, etc.) counts as a word boundary — "it's" → "It'S". Classic gotcha.
+
+  . String comparison is by Unicode code point, not human alphabetical order. Uppercase letters (A–Z = 65–90) sort before lowercase (a–z = 97–122). So 'A' < 'a' → True, and "Zebra" < "apple" → True. Never assume case-insensitive-looking alphabetical order.
+
+  . f-string format spec syntax: {value:[fill][align][width]} — < left, > right, ^ center align; optional fill char before the align symbol (default is space). f"{s:*^11}" centers s in width 11, padding with *.
+
+  . s[:] on a string vs a list: for strings, s[:] is s-equivalent → True (CPython skips copying since strings are immutable — same optimization family as interning/constant-folding). For lists, l[:] always creates a genuinely new object — id differs — because lists are mutable. Good one to hold onto for the combined Lists + Strings session.
+
+  . Escape sequences count as 1 char in len(). \t, \n, etc. are single characters at runtime — don't count them as 2 (backslash + letter). "hello\tworld\nfoo" → len 15, not 17.
+
+  . X.join(Y) — X is the separator, Y is what gets joined. Direction matters, and where X comes from changes the result completely: Ex. "hello".join(["1", "2", "3"])   # "1hello2hello3" -> Mental check: read it as separator.join(list)
+
+  . Any non-empty string is truthy — including "0", "False", " ". Only "" is falsy. Don't conflate string truthiness with numeric/semantic value. bool("") -> False, bool(" ") -> True
+
+=========
+## LISTS:
+=========
+
+. List is a built-in data structure used to store an ordered collection of items. They are dynamic, resizable and capable of storing multiple data types.
+
+. Mutable: list elements can be changed, updated, added, or removed after the list is created.
+. Ordered: elements maintain the order in which they are inserted.
+. Index-based: elements are accessed using their position, starting from index 0.
+
+. A list can also be created by passing an iterable (such as tuple, string or another list) to the list() constructor.
+  list(str) -> [list of chars in str]
+  list(tuple) -> [list of elements in tuple]
+  list(dict) -> [list of keys in dict]
+
+# Internal Representation of Lists:
+  Python list stores references to objects, not the actual values directly.
+
+  . The list keeps memory addresses of objects like integers, strings or booleans.
+  . Actual objects exist separately in memory.
+  . Modifying a mutable object inside a list changes the original object.
+  . Reassigning an immutable object creates a new object instead of changing the old one.
+
+. insert(): Adds an element at a specific position. 
+  a = [1. 3]
+  a.insert(1, 2)
+  a -> [1, 2, 3]
+
+. Flattening list of lists:
+
+  mat = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+  res = [val for row in mat for val in row]
+
+# Lists — Reference vs. Copy vs. Mutation (master cheat sheet):
+
+  . Assignment never copies.
+    b = a are two names of same list. No new object creation.
+
+  . Following create a NEW list (safe — original untouched)
+    c = a[:], c = list(a), c = a.copy(), c = a + [x], c = [x for x in a], c = [0] * 3
+    -> All of these are shallow — if a contains nested lists, the inner lists are still shared references, not copies.
+
+  . Following mutate original list in place:
+    all list functions append, insert, extend, remove, pop, sort, reverse, a += [x]
+
+  . += vs + same looking but different behavior
+
+  . Default mutable arguments are created ONCE, at def time — not per call. Use lst=None if wanted per call that.
+
+  . Never mutate a list while iterating over it - .remove(), .pop(), del inside a for loop) — indices shift under you and elements get silently skipped. Iterate over a[:] (a copy) or build a new list instead.
+
+  . The rule to extract: .method() mutates, name = new_value always rebinds — and rebinding one name never affects any other name that already pointed to the old object.
+
+    a = [1, 2, 3]
+    a.extend([4, 5])   # mutates in place -> a is now [1,2,3,4,5] (same object, call it L1)
+    b = a               # b points to L1 too
+    a = [9, 9]          # REBINDS a to a brand new list object (L2)
+                        # b still points to L1, untouched
+    print(b)            # [1, 2, 3, 4, 5]
+
+  . a = [1, 2, 3, 4, 5]
+    print(a[10:20]) -> [], slicing never Index error even widely out of range just returns [].
+
+  . any method that mutates in place (.sort(), .reverse(), .append(), .extend(), etc.) returns None by convention in
+  Python — the "no return value" is a signal that it works in-place.
+    a = [3, 1, 4]
+    b = a.sort() <- Bug
+    print(b)     # None
+    print(a)     # [1, 3, 4]  <- a itself is sorted, but b is None
+
+  . a, b, *c = [1, 2, 3, 4, 5]
+    # a, b take the first two; *c ("starred") soaks up everything else into a list
+    print(a, b, c) -> 1 2 [3, 4, 5]
+
+    *c, a, b = [1, 2, 3, 4, 5]
+    # a, b take the LAST two; *c soaks up everything before them
+    print(a, b, c) -> 4 5 [1, 2, 3]
+
+  . in-place mutators return None, slicing always clamps instead of raising.
+
+# Python Lists — Internal Structure & Amortized Complexity:
+
+  . A list is a dynamic array of pointers, not objects themselves → mixed types possible, all slots same size
+  . Append when full → allocate new bigger block, copy all pointers, free old block
+  . CPython over-allocates on growth (~1.125x + extra) → most appends land in already-reserved space → no reallocation
+  . Amortized O(1) = expensive O(n) reallocation happens rarely; averaged over many appends, cost per append is O(1)
+  . insert(0, x) / pop(0) = O(n) — every other element must physically shift one slot
+  . append() / pop() (end) = O(1) amortized — no shifting
+  . List = bad choice for queue (pop(0) repeatedly = O(n) each). Use collections.deque instead — O(1) both ends
+  . Shallow copy (.copy()) copies pointers, not underlying objects → nested lists still share references
+  . copy.deepcopy() — recursively copies actual objects, not just pointers
+
+  import sys
+  a = []
+  prev = sys.getsizeof(a)
+  for i in range(20):
+      a.append(i)
+      size = sys.getsizeof(a)
+      if size != prev:
+          print(f"len={len(a)}: size jumped to {size} bytes")
+          prev = size
+
+  len=1: size jumped to 88 bytes   (0 -> 1, starts empty)
+  len=5: size jumped to 120 bytes   (2,3,4 reused, no realloc)
+  len=9: size jumped to 184 bytes   (5,6,7,8 reused)
+  len=17: size jumped to 248 bytes  (9..16 reused — gap keeps widening)
+
+  . Gap between jumps grows → visual proof of over-allocation → this is why append is amortized O(1).
+
+. Quickly go through **list generator**.
+  . string = 'geek'
+    li = list(string[i] for i in range(len(string)-1, -1, -1))
+    print(li) -> ['k', 'e', 'e', 'g']
+
+. delete some parts of a list (basically slice the list) using del keyword. -> del a[3:6]
+
+==========
+## TUPLES:
+==========
+
+. A tuple is an immutable ordered collection of elements.
+  . Tuples are similar to lists, but unlike lists, they cannot be changed after their creation.
+  . Can hold elements of different data types.
+  . These are ordered, heterogeneous and immutable.
+
+. Tuples can store elements of different data types, such as integers, strings, lists and dictionaries, within a single structure.
+
+. Tuples can be concatenated using the + operator. Only tuples can be concatenated with tuples. Combining a tuple with other types like lists will raise an error. Tuples themselves can contain mixed datatypes.
+Ex. tup1 = (0, 1, 2, 3)
+    tup2 = ('Geeks', 'For', 'Geeks')
+    tup3 = tup1 + tup2
+    print(tup3)                       -> (0, 1, 2, 3, 'Geeks', 'For', 'Geeks')
+
+# Tuple Slicing:
+  . tuples are immutable, slicing creates a new tuple without modifying the original tuple.
+
+. Since tuples are immutable, we cannot delete individual elements of a tuple. However, we can delete an entire tuple using del statement.
+
+# Tuple Unpacking with Asterisk (*):
+  . *operator is used in tuple unpacking to grab multiple items into a list. This is useful to extract just a few specific elements and collect the rest together.
+
+  Ex. tup = (1, 2, 3, 4, 5)
+  a, *b, c = tup -> 1 [2, 3, 4] 5
+
+# Reversing Tuple:
+
+  . t[::-1]... simple
+  . reversed() function returns an iterator that can be converted to a tuple.
+    Ex. t = (1, 2, 3, 4, 5)  
+        # Reverse the tuple using the built-in reversed() function and convert it back to a tuple
+        rev = tuple(reversed(t))
+        print(rev) -> (5, 4, 3, 2, 1)
+
+  . In-place tuple reversal using collections.deque, which provides a reverse() method for in-place reversal of the tuple.
+
+    '''
+    from collections import deque  
+    t = (1, 2, 3, 4, 5)
+    deq = deque(t)
+
+    # Reverse the deque in place
+    deq.reverse()
+
+    # Convert the reversed deque back to a tuple
+    rev = tuple(deq)
+
+    print(rev)
+
+    '''
+
+    . deque(t) allows efficient in-place reversal with its reverse() method avoiding the need for additional looping or slicing.
+    . tuple(deq) converts the reversed deque back to a tuple ensuring the result is a new tuple while leaving the original tuple unmodified.
+
+# Convert a List of Tuples into Dictionary:
+
+  . Using dict(list) function. dixt([(a, 1), (b, 2)]) -> {"a": 1, "b": 2}
+  . Using dictionary comprehension -> res = {key: value for key, value in a}
+  . Using for loop -> 
+    res = {}  
+    for key, value in a:  
+        res[key] = value
+  . Using map() with dict() -> res = dict(map(lambda x: (x[0], x[1]), a))
+
+# NamedTuple:
+
+  . a lightweight data structure provided by the collections module
+  . allows you to create tuple-like objects whose elements can be accessed using meaningful attribute names instead of only numeric indexes.
+
+  . Syntax -> namedtuple(typename, field_names)
+
+    Parameters:
+
+    typename: Name of the NamedTuple class to create.
+    field_names: List or string containing the names of the fields.
+    Return Value: Returns a new NamedTuple class that can be used to create objects.
+
+  '''
+  from collections import namedtuple
+
+  Student = namedtuple("Student", ["name", "age", "dob"])
+  s = Student("Emma", 20, "12-08-2005")
+
+  print(s[1])/ print(s.age) -> 20
+  print(s.name) ->                                          Emma
+
+  '''
+
+  . The built-in getattr() function can also retrieve a field value when the field name is available as a string. This approach is useful when the field name is determined dynamically at runtime.
+
+    from collections import namedtuple
+
+    Student = namedtuple("Student", ["name", "age", "city"])
+    s = Student("Emma", 20, "London")
+    print(getattr(s, "city")) ->                              London
+
+  # Conversion Operations:
+
+    . NamedTuple provides built-in methods to convert data between different Python data types.
+    . These methods are useful when working with lists, dictionaries, or when exchanging data between different parts of a program.
+
+    1) Using _make(): creates a NamedTuple object from an iterable such as a list or tuple. The values must be in the same order as the fields.
+
+    '''
+    from collections import namedtuple
+
+    Student = namedtuple("Student", ["name", "age", "city"])
+    data = ["Emma", 20, "London"]
+    s = Student._make(data)
+    print(s) ->                                                 Student(name='Emma', age=20, city='London')
+
+    '''
+    2) Using _asdict(): converts a NamedTuple object into a dictionary, where the field names become keys.
+
+    '''
+    from collections import namedtuple
+
+    Student = namedtuple("Student", ["name", "age", "city"])
+    s = Student("Emma", 20, "London")
+    print(s._asdict()) ->                                       {'name': 'Emma', 'age': 20, 'city': 'London'}
+
+    '''
+    3) Using **: unpacks a dictionary and passes its key-value pairs as keyword arguments to create a NamedTuple.
+
+    '''
+    from collections import namedtuple
+
+    Student = namedtuple("Student", ["name", "age", "city"])
+    data = {"name": "Emma",
+            "age": 20,
+            "city": "London"}
+
+    s = Student(**data)
+    print(s) ->                                                 Student(name='Emma', age=20, city='London')
+
+    '''
+    . The dictionary keys must exactly match the field names of the NamedTuple.
+
+    4) Using _fields: returns a tuple containing the names of all the fields defined in the NamedTuple.
+
+    '''
+    from collections import namedtuple
+
+    Student = namedtuple("Student", ["name", "age", "city"])
+    s = Student("Emma", 20, "London")
+    print(s._fields) ->                                       ('name', 'age', 'city')
+
+    '''
+    5) Using _replace(): creates a new NamedTuple with one or more field values updated. The original NamedTuple remains unchanged because NamedTuples are immutable.
+
+    '''
+    from collections import namedtuple
+
+    Student = namedtuple("Student", ["name", "age", "city"])
+    s = Student("Emma", 20, "London")
+    new_s = s._replace(city="Paris")
+
+    print(s)
+    print(new_s)
+
+    '''
+
+    O/p:  Student(name='Emma', age=20, city='London')
+          Student(name='Emma', age=20, city='Paris')
+
+# Quick Notes- Tuples Hands-on session:
+  
+  . t[i] = x on a tuple → TypeError (can't reassign a slot)
+
+  . Tuple immutability is shallow: it locks the references held in its slots, not the mutability of the objects those references point to
+    - t[2].append(5) on a mutable element (e.g. a list) works fine — same object, same id(), contents changed in place
+    - Tuple's own structure/slots never touched → no violation
+
+  . t += (...) on a tuple cannot mutate in place → Python does t = t + (...) under the hood → new object → new id()
+    (Contrast: list += ... can mutate in place, same id — good thing to keep in back pocket for Set/Dict comparisons later)
+  . (1) → just int, parentheses are grouping, not tuple syntax
+  . (1,) → tuple — the comma, not the parentheses, is what defines a tuple
+  . Parentheses are optional for tuples (1, alone is a tuple); comma is mandatory for single-element tuples
+  . Empty tuple () needs no comma — no ambiguity to resolve
+  . Only two methods exist on tuples: count() and index() — that's it (immutability means no append, remove, sort, etc.)
+
+  . Starred unpacking (*c or *x) always produces a list, regardless of whether you're unpacking from a tuple, string, etc. — the non-starred variables keep the type of the individual elements, not the source container.
+    Ex. a, b, *c = (1,2,3,4,5) → a=1, b=2, c=[3,4,5]
+
+  . t1 == t2 → value equality (compares element by element)
+  . t1 is t2 → identity check (same object in memory) — generally False for separately created equal tuples, even same value
+  . Slicing out of range → no error, just returns as much as exists (or () if nothing overlaps) — slicing is always safe, indexing is not. This is true for lists and strings too.
+  . Hashability of tuples: a tuple is hashable only if every element inside it is hashable. (1, [2, 3]) → unhashable → TypeError if used as a dict key or set element.
+
+  . names = ("Alice", "Bob")
+    ages = (25, 30)
+    zipped = tuple(zip(names, ages))  ->  zip function yields list of tuples.
+    print(zipped)                     -> (("Alice", 25), ("Bob", 30)) not (["Alice", 25], ["Bob", 30])
+
+========
+## SETS:
+========
+
+. Set is a built-in Python data type used to store a collection of unique items.
+. Stores only unique elements; duplicate values are automatically removed.
+. Unordered collection, so elements do not have a fixed position and cannot be accessed using indexes.
+. Supports fast search, insertion and deletion operations using hashing internally.
+
+. set() -> method is used to convert other data types, such as lists or tuples, into sets.
+  set(list) -> {set of unique list elements}/  set(range(3, 8)) creates a set from numbers generated by range().
+  set(tuple) -> {set of unique tuple elements}
+  set(dict) -> {set of dictionary keys}
+
+. Sets cannot have duplicate values. While you cannot modify the individual elements directly, you can still add or remove elements from the set.
+. s[1] = "Hello" Error, set elements cannot be changed directly. Only add() or remove() can modify a set.
+. Can store heterogenous elements i.e. can store mixture of different data types
+
+# Frozen Sets:
+  
+  . Frozensets are immutable, so methods like add() or remove() cannot be used. They are also hashable, which allows them to be used as dictionary keys. But you can perform operations like union, intersection and difference. 
+  . use frozenset() function to create a one. -> frozenset(iterable -> [], (), {})
+
+# Internal working:
+
+  . Implemented using hashtables, similar to dicts.
+  . Each index in the hash table represents a possible hash value where elements are stored based on their computed hash key.
+  . When two elements map to the same index, they are linked together using a linked list, forming a chain at that position.
+  . This chaining mechanism helps efficiently handle collisions, allowing multiple elements to exist at the same hash index without overwriting each other.
+
+  . Hashed value as key1 - val 1 -> val 2
+                    key2 - val 4 -> val 5 -> val 6
+
+  . During traversal, insertion or deletion, the algorithm moves through these linked elements at each index to access or modify data efficiently.
+
+# Set Methods:
+
+  . set_name.copy() -> returns shallow copy of the set.
+  . set1.difference(set2) -> Returns a set containing elements present in the first set but not in the second set.
+  . set1.difference_update(set2) -> Removes common elements from original set.
+    Ex. a = {1, 2, 3, 4}
+        b = {3, 4, 5}
+        a.difference_update(b)
+        print(a)                -> {1, 2}
+  . discard() -> removes element from set if exists, returns nothing if doesn't exist.
+  . set1.intersection(set2) -> Returns common elements.
+  . set1.intersection_update(set2) -> Updates set1 with only elements that are common.
+  . set1.isdisjoint(set2) -> Returns True if two sets have no common elements.
+  . set1.issubset(set2) -> Returns True if all elements of one set are present in another set -> all of set1 in set2?
+  . set1.issuperset(set2) -> Returns True if a set contains all elements of another set. -> all of set2 in set1?
+    - reverse/ opp of issubset()
+  . set_name.pop() -> Removes and returns random element from the set.
+  . remove() -> removes specified element from the set.
+  . set1.symmetric_difference(set2) -> Returns elements that are present in either set but not in both.
+    Ex. a = {1, 2, 3}
+        b = {3, 4, 5}
+        print(a.symmetric_difference(b)) -> {1, 2, 4, 5}
+  . set1.symmetric_difference_update(set2) -> Updates the set1 with the symmetric difference of two sets.
+  . set1.union(set2) -> Returns a new set containing all unique elements from the sets.
+  . set1.update(iterable) -> Adds all elements from another iterable to the set.
+
+# Operators for Sets:
+  . "in/ not in " -> containment check
+  . s1 == s2  s1 is equivalent to s2
+  . s1 != s2  s1 is not equivalent to s2
+  . s1 <= s2  s1 is subset of s2
+  . s1 < s2   s1 is proper subset of s2
+  . s1 >= s2  s1 is superset of s2
+  . s1 > s2   s1 is proper superset of s2
+  . s1 | s2 the union of s1 and s2
+  . s1 & s2 the intersection of s1 and s2
+  . s1 - s2 the set of elements in s1 but not s2
+  . s1 ˆ s2 the set of elements in precisely one of s1 or s2
+
+# Quick Notes- Tuples Hands-on session:
+
+  . s.add([4,5]) → TypeError: unhashable type: 'list'. Lists/dicts/sets can't go inside a set; tuples can (if their contents are also hashable). s.add((4, 5)) -> adds 4 and 5 in set s.
+  . sets are iterable, but adding/removing elements during iteration raises RuntimeError: Set changed size during iteration
+  . remove() vs discard(): remove() raises KeyError if the element is absent; discard() silently does nothing. Same removal behavior otherwise.
+  . sorted() is a builtin, not type-specific: it accepts any iterable (list, tuple, set, string, dict-keys...) and always returns a new list. It never mutates the original, and "no sort method on set" ≠ "can't sort a set" — you sort via sorted(), not a set method.
+    Ex. s = {3, 1, 4, 1, 5, 9, 2, 6}
+        print(sorted(s))              -> [1, 2, 3, 4, 5, 6, 9]
+        print(s)                      -> {1, 2, 3, 4, 5, 6, 9}
+
+  . Only hashable types are valid dict keys / set elements: frozenset is hashable (immutable), plain set is not. TypeError: unhashable type: 'set' on d[{1,2}] = ....
+  . bool is a subclass of int: True == 1, False == 0, and they hash identically. In a set (or as dict keys), True/1 collapse to one slot, False/0 collapse to one slot — this is a very common interview gotcha.
+
+# x op= y — mutable vs immutable:
+
+  . Rule: if type has in-place dunder (__iadd__, __isub__...) → mutates in place. Else → falls back to x = x op y → new object.
+  . Mutable (list, set, dict) → +=/-=/|= etc. mutate same object → aliases see the change.
+  . Immutable (int, float, str, tuple, frozenset) → op= always creates new object, rebinds name → aliases unaffected.
+  . Quick test: does the type have .append()/.add()/.update()-style method? Yes → mutable → in-place. No → immutable → rebind only.
+  . Classic bite: lst += [x] inside a function mutates caller's list; tup += (x,) doesn't touch caller's tuple.
+
+====================
+Dictionary/ Hashmaps:
+====================
+
+. Keys must be unique and immutable (like strings or numbers), values can be of any data type, whether mutable or immutable.
+
+# dict():
+
+  . dict()/ dict(mapping -> existing dictionary or mapping object)/ dict(iterable -> list of tuples)/ dict(**kwargs -> One = "1", Two = "2")/ dict(mapping, **kwargs)
+
+  . copy vs shallow copy:
+    Ex. 
+    """
+    d = {'a': 1, 'b': 2, 'c': 3}
+
+    # shallow copy using dict
+    d_copy = dict(d)
+
+    # reference copy
+    d_shallow = d
+
+    # changing value in reference copy will change d
+    d_shallow['a'] = 10
+    print(d)                                          {'a': 10, 'b': 2, 'c': 3}
+
+    # changing value in copied dictionary won't affect d
+    d_copy['b'] = 20
+    print(d)                                          {'a': 10, 'b': 2, 'c': 3}
+
+    """
+
+. The dict.get() method in Python returns the value associated with a given key. If the key is not present, it returns None by default or a specified default value if provided.
+
+# Removing Dictionary Items:
+  
+  . del -> removes item using it's key -> del d["a"]
+  . pop() -> removes the item with the given key and returns its value
+  . popitem() -> removes and returns the last inserted key-value pair
+  . clear() -> removes all items from the dictionary
+
+# Iterate Over a Dictionary in Python:
+
+  . items() -> returns both the key and its corresponding value together.
+    - dict.items() -> returns a dict_items view object containing (key, value) tuples. This view updates automatically when the dictionary is modified.
+    - items() method is only available for dictionary objects. If called on a non-dictionary object(like list, tuple etc.), it will raise an AttributeError.
+    - list(d.items()) -> list of tuples
+
+  . key() ->  returns a view object that contains all the keys of the dictionary.
+    - list(d.keys()) -> list of keys
+
+  . values() ->  returns all the values stored in the dictionary.
+
+  . Using Dictionary Directly -> A dictionary itself is iterable. Iterating over it directly returns its keys, which can then be used to access the corresponding values.
+
+# Nested Dictionaries:
+
+# Quick Notes- Dictionary Hands-on session:
+
+  . Missing key → d[key] raises KeyError; d.get(key) doesn't (returns None or given default).
+  .True/1/1.0 collapse to one dict key (equal hash + equal value) — key identity = first insert, value = last write.
+  . setdefault(k, default) only inserts default if k is absent; if k already exists, it just returns the existing value — so repeated calls on the same key reuse the same object, no reset.
+  . d1 | d2 and d1.update(d2) differ: | returns a new dict (d1 untouched); update mutates d1 in place. Both: right/argument side wins on key conflict.
+  . Mutating dict size (add/remove keys) during iteration → RuntimeError. Updating an existing key's value mid-iteration is safe.
+
+  . Aliasing trap: any construct that "repeats" a single mutable object across multiple keys/slots (dict.fromkeys(keys, []), [[...]] * n) shares one object, not independent copies — mutate through one handle, all handles see it. Fix: comprehension ({k: [] for k in keys}) to force fresh objects per key.
+
+  . copy() is shallow — top-level keys/values are independent post-copy, but nested mutable values are still shared references.
+
+  . copy() is shallow, always. Top-level key rebind (d2["a"] = 99) → independent, no shared effect. But if a key's value is itself mutable (list/dict) and you mutate it in place (d2["a"].append(...)) instead of rebinding — that object is shared between d and d2, so the change shows through both. Rebind = safe, in-place mutate = leaks across the copy.
+  
+  . update(other_dict, **kwargs) applies in order: positional dict processed first, then kwargs — last write in that sequence wins on key conflict. Not "kwargs always override" as a separate rule — it's just sequential application.
+  . Dict equality via .items() &/== compares (key, value) pairs exactly — same key with a different value does not count as a match, even though the key alone matches in .keys() &.
+
+  . n in d for NaN is about identity, not value equality. Hash gets you to the right slot; then Python checks is before falling back to ==. Same NaN object → is passes → found. A different NaN object → is fails, and == on NaN is always False → not found, even though both NaNs may hash identically. Contrast with True/1/1.0, which pass both hash and == — genuinely equal, not just identity-matched.
+
+  . Everything else (popitem LIFO, live views reflecting deletes, reversed() order, try/except/finally flow) — solid, no gaps.
+
+
