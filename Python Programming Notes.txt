@@ -578,4 +578,96 @@ Dictionary/ Hashmaps:
 
   . Everything else (popitem LIFO, live views reflecting deletes, reversed() order, try/except/finally flow) — solid, no gaps.
 
+======================
+## Scope of Variables:
+======================
 
+. Python is not statically types, no need to declare them and their type before
+  using them.
+. The location where we can find a variable and also access it if required is called
+  the scope of a variable.
+
+# Local variable:
+  . Initialized within a function and unique to that function. Can't be used outside.
+  . If we try to use this local variable outside the function -> NameError
+
+# Global variable:
+  . Defined and declared outside any function and are not specified to any function.
+    They can be used by any part of the program.
+
+. Suppose a variable with the same name is defined inside the scope of the function
+  as well then it will print the value given inside the function only and not the global value.
+
+    # This function has a variable with
+    # name same as s.
+    def f():
+        s = "Me too."
+        print(s)                             -> Me too.
+
+    # Global scope
+    s = "I love Geeksforgeeks"
+    f()
+    print(s)                                 -> I love Geeksforgeeks
+
+. If we try to change value of global variable inside a function ->
+  UnboundLocalError: local variable '<var_name>' referenced before assignment
+. To make it work, we need to use *global* keyword (only for change/ assignment)
+. Any variable which is changed or created inside of a function is local,
+  if it hasn’t been declared as a global variable.
+
+    # This function modifies global variable 's'
+    def f():
+        global s
+        print(s)
+        s = "Look for Geeksforgeeks Python Section"
+        print(s)
+
+
+    # Global Scope
+    s = "Python is great !"
+    f()
+    print(s)
+
+   O/P:
+    Python is great!
+    Look for Geeksforgeeks Python Section
+    Look for Geeksforgeeks Python Section
+
+. Python determines whether a variable is local or global at compile time, not at runtime.
+  If a variable is assigned anywhere in a function, Python treats it as local throughout
+  that entire function, unless it is declared global or nonlocal.
+  So when,
+    print(s)                                    -> ERROR
+    s = "Look for Geeksforgeeks Python Section"
+    print(s)
+
+    global s
+    print(s)                                    -> No Error
+    s = "Look for Geeksforgeeks Python Section"
+    print(s)
+
+# Nonlocal Keyword:
+
+  . nonlocal keyword is used in the case of nested functions
+  . This keyword works similarly to the global, but rather than global, this keyword
+    declares a variable to point to the variable of an outside enclosing function,
+    in case of nested functions.
+
+    # Python program to demonstrate
+    # nonlocal keyword
+
+    print("Value of a using nonlocal is : ", end="")
+
+    def outer():
+        a = 5
+
+        def inner():
+            nonlocal a
+            a = 10
+        inner()
+        print(a)
+
+    outer()
+
+    O/P:
+    Value of a using nonlocal is : 10
