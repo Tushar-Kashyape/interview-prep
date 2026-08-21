@@ -28,6 +28,11 @@ Constraints:
 Follow up: If you have figured out the O(n) solution, try coding another solution
 of which the time complexity is O(n log(n)).
 """
+
+
+"""
+Same approach but extra space code:
+
 from collections import deque
 
 def min_size(target, nums):
@@ -60,6 +65,24 @@ def min_size(target, nums):
         i += 1
 
     return 0 if min_length == num_length else min_length
+
+"""
+
+def min_size(target, nums):
+    left = 0
+    current_sum = 0
+    num_length = len(nums)
+    min_length = num_length + 1
+
+    for right in range(len(nums)):
+        current_sum += nums[right]
+
+        while current_sum >= target:
+            min_length = min(min_length, right - left + 1)
+            current_sum -= nums[left]
+            left += 1
+
+    return 0 if min_length == num_length + 1 else min_length
 
 target = 15
 nums = [1, 2, 3, 4, 5]
