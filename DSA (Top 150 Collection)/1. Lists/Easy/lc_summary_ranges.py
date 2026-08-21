@@ -45,7 +45,7 @@ def summary_ranges(nums):
     res = str(nums[0])
     length = len(nums)
 
-    for i in range(length):
+    for i in range(length - 1):
 
         if nums[i + 1] - nums[i] > 1:
 
