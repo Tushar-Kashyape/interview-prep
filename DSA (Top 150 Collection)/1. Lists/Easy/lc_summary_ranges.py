@@ -45,6 +45,8 @@ def summary_ranges(nums):
     res = str(nums[0])
     length = len(nums)
 
+    if length == 1: return [str(nums[0])]
+
     for i in range(length - 1):
 
         if nums[i + 1] - nums[i] > 1:
@@ -59,13 +61,14 @@ def summary_ranges(nums):
             else:
                 res = str(nums[i + 1])
         else:
-            if i == length - 1:
-                res = res + "->" + str(nums[i])
+            if i + 1 == length - 1:
+                res = res + "->" + str(nums[i + 1])
                 result.append(res)
                 return result
 
     return result
 
 
-nums = [0,2,3,4,6,8,9]
+# nums = [0,2,3,4,6,8,9]
+nums = [0,1,2,4,5,7]
 print(summary_ranges(nums))
