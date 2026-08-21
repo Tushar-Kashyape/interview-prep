@@ -31,7 +31,7 @@ of which the time complexity is O(n log(n)).
 from collections import deque
 
 def min_size(target, nums):
-    if target in nums: return nums.index(target)
+    if target in nums: return 1
 
     if sum(nums) < target: return 0
 
@@ -43,20 +43,26 @@ def min_size(target, nums):
 
     while i < num_length:
         diff = temp_target - nums[i]
-        if diff > 0:
-            window.append(nums[i])
-            temp_target -= nums[i]
-            i += 1
-        elif diff < 0:
-            window.append(nums[i])
-            while diff < 0:
-                diff += window.popleft()
+        window.append(nums[i])
+
+        if diff <= 0:
+            while True:
+                if diff + window[0] > 0:
+                    break
+                else:
+                    diff += window[0]
+                    temp_target += window[0]
+                    window.popleft()
 
             min_length = min(min_length, len(window))
-            i += 1
+
+        temp_target -= nums[i]
+        i += 1
 
     return 0 if min_length == num_length else min_length
 
-target = 11
+target = 15
 nums = [1, 2, 3, 4, 5]
+# target = 7
+# nums = [2,3,1,2,4,3]
 print(min_size(target, nums))
