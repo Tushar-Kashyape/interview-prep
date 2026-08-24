@@ -53,7 +53,9 @@ Constraints:
 1 <= nums[i] <= 50
 """
 
-# NO HELP TAKEN
+"""
+NO HELP TAKEN - CLEAN SOLVE
+"""
 
 def longest_monotonic(nums: list[int]) -> int:
     n = len(nums)
@@ -90,3 +92,4 @@ def longest_monotonic(nums: list[int]) -> int:
 
 nums = list(map(int, input("Enter nums: ").split()))
 print(longest_monotonic(nums))
+

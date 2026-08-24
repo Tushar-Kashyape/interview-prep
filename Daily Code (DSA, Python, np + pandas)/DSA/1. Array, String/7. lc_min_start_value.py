@@ -38,6 +38,15 @@ Constraints:
 -100 <= nums[i] <= 100
 """
 
+"""
+One test case failed for [-5 -2 4 4 -2]
+
+Prev Logic: Diff against OR Sum with min. value in nums should be >= 1
+            here min. val was -5 -> 6 as start-value but it fails later in nums
+New Logic: Diff against OR Sum with last negative value should be >= 1, then
+            continue backwards till start of nums -> start-value
+"""
+
 def min_start_value(nums: list[int]) -> int:
     n = len(nums)
     min_diff = 1
@@ -56,12 +65,3 @@ def min_start_value(nums: list[int]) -> int:
 
 nums = list(map(int, input("Enter nums: ").split()))
 print(min_start_value(nums))
-
-"""
-One test case failed for [-5 -2 4 4 -2]
-
-Prev Logic: Diff against OR Sum with min. value in nums should be >= 1
-            here min. val was -5 -> 6 as start-value but it fails later in nums
-New Logic: Diff against OR Sum with last negative value should be >= 1, then
-            continue backwards till start of nums -> start-value
-"""

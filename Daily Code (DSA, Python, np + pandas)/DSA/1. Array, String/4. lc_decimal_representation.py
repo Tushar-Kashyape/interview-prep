@@ -49,6 +49,10 @@ Constraints:
 1 <= n <= 109
 """
 
+"""
+NO HELP TAKEN - CLEAN SOLVE
+"""
+
 def decimal_representation(n: int) -> list[int]:
     ans = []
     i = 0
@@ -62,6 +66,5 @@ def decimal_representation(n: int) -> list[int]:
 
     return ans[::-1]
 
-# No help taken
 n = int(input())
 print(decimal_representation(n))

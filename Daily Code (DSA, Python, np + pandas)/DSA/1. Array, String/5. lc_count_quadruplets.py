@@ -36,6 +36,11 @@ Constraints:
 from collections import defaultdict
 
 """
+Had to check logic for more optimized solution. Brute-force can work because length
+of input array is small.
+"""
+
+"""
 Heavy Brute-force:
 
 def count_quadruplet(nums: list[int]) -> int:
@@ -77,9 +82,6 @@ def count_quadruplet(nums: list[int]) -> int:
 
     return count
 
-"""
-Had to check logic for more optimized solution. Brute-force can work because length
-of input array is small.
-"""
+
 nums = list(map(int, input("Enter the nums: ").split()))
 print(count_quadruplet(nums))
