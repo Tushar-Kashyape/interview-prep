@@ -69,7 +69,7 @@
   . split() method converts a string into a list by splitting it at a specified separator. If no separator is provided, it splits the string wherever it finds whitespace.
   . list() function converts a string into a list by treating every character as a separate element. This includes letters, digits, punctuation marks, and even spaces.
 
-# Quick Notes- String Hands-on session:
+# Quick Notes - String Hands-on session:
 
   . Slicing never errors, indexing does. s[10:], s[-100:100] etc. → Python clamps out-of-range slice bounds silently, returns '' if fully out of range. Only s[i] (single index) raises IndexError. True for lists too.
   . Strings are immutable. s[0] = 'x' → TypeError. No item assignment, ever. Any "modification" (.replace(), .upper(), etc.) returns a new string.
@@ -213,7 +213,7 @@
 ## TUPLES:
 ==========
 
-. A tuple is an immutable ordered collection of elements.
+. A tuple is an immutable-ordered collection of elements.
   . Tuples are similar to lists, but unlike lists, they cannot be changed after their creation.
   . Can hold elements of different data types.
   . These are ordered, heterogeneous and immutable.
@@ -268,7 +268,7 @@ Ex. tup1 = (0, 1, 2, 3)
 
 # Convert a List of Tuples into Dictionary:
 
-  . Using dict(list) function. dixt([(a, 1), (b, 2)]) -> {"a": 1, "b": 2}
+  . Using dict(list) function. dict([(a, 1), (b, 2)]) -> {"a": 1, "b": 2}
   . Using dictionary comprehension -> res = {key: value for key, value in a}
   . Using for loop -> 
     res = {}  
