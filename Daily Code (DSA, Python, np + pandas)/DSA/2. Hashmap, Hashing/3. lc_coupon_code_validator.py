@@ -79,14 +79,11 @@ def validate_coupon(codes: list[str], business_lines: list[str],
     for code, business_line, status in list(zip(codes, business_lines, is_active)):
 
         def validate_code(code):
-
             if not code:
                 return False
-
             for c in code:
                 if not c.isalnum() and c != "_":
                     return False
-
             return True
 
         if status and validate_code(code) and business_line in valid_business:
