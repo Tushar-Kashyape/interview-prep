@@ -43,7 +43,7 @@ def longest_consec_subseq(nums: list[int]) -> int:
     longest = 0
     track = set(nums)
 
-    for num in nums:
+    for num in track:
         if (num - 1) not in track:
             length = 1
 
