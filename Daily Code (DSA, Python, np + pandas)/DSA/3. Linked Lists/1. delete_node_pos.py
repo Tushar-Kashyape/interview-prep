@@ -1,6 +1,11 @@
 from linked_list import Node
 
 def delete_node(head: Node, pos) -> Node:
+    """
+    Deletes the node at the specified 0-based index.
+    Returns the new head node.
+    Raises IndexError if index is negative or out of bounds.
+    """
     if pos < 0 or not head:
         raise IndexError(f"{pos} is invalid")
 
