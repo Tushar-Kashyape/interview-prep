@@ -30,7 +30,7 @@ we have dunder methods over default operators.
 class Room:
     def __init__(self, room_number: str, price_per_night: float):
         self.room_number = room_number
-        self.price_per_night = price_per_night
+        self.price_per_night = float(price_per_night)
         self.is_booked = False
 
     # Print room for user.

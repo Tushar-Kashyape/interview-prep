@@ -15,14 +15,14 @@ class Room:
 
     def __init__(self, room_number: str, price_per_night: float):
         self.room_number = room_number
-        self.price_per_night = price_per_night
+        self.price_per_night = float(price_per_night)
         self.is_booked = False
 
     def book_room(self):
         self.is_booked = True
 
     def calculate_cost(self, nights: int) -> float:
-        return self.price_per_night * nights
+        return self.price_per_night * int(nights)
 
 
 room_num = input("Enter room number: ")
