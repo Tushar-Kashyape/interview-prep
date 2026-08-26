@@ -1,3 +1,16 @@
+"""
+At its foundation, a class is a blueprint. Creating an object from a class constructs
+an instance in memory.
+
+__init__: The constructor method that executes automatically when a new object is
+created.
+
+self: The explicit reference to the current instance being accessed or modified.
+
+Instance Attributes: Variables attached to self that belong uniquely to that specific
+object.
+"""
+
 class Room:
 
     def __init__(self, room_number: str, price_per_night: float):
