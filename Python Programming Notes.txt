@@ -482,7 +482,7 @@ Ex. tup1 = (0, 1, 2, 3)
 
 # Quick Notes- Tuples Hands-on session:
 
-  . s.add([4,5]) → TypeError: unhashable type: 'list'. Lists/dicts/sets can't go inside a set; tuples can (if their contents are also hashable). s.add((4, 5)) -> adds 4 and 5 in set s.
+  . s.add([4,5]) → TypeError: unhashable type: 'list'. Lists/dicts/sets can't go inside a set; tuples can (if their contents are also hashable). s.add((4, 5)) -> adds (4, 5) in set s.
   . sets are iterable, but adding/removing elements during iteration raises RuntimeError: Set changed size during iteration
   . remove() vs discard(): remove() raises KeyError if the element is absent; discard() silently does nothing. Same removal behavior otherwise.
   . sorted() is a builtin, not type-specific: it accepts any iterable (list, tuple, set, string, dict-keys...) and always returns a new list. It never mutates the original, and "no sort method on set" ≠ "can't sort a set" — you sort via sorted(), not a set method.

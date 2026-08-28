@@ -49,7 +49,7 @@ Do I just need a pure utility function that depends on NO object/class state?
 """
 
 class Room:
-    VALID_TYPES = {"STANDAR", "DELUXE", "SUITE"}
+    VALID_TYPES = {"STANDARD", "DELUXE", "SUITE"}
 
     def __init__(self, room_number: str, price_per_night: float,
                  room_type: str = "STANDARD"):
