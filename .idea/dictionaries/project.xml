@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>classmethod</w>
+      <w>hashability</w>
     </words>
   </dictionary>
 </component>
