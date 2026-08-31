@@ -1,0 +1,56 @@
+"""
+2574. Left and Right Sum Differences
+
+You are given a 0-indexed integer array nums of size n.
+
+Define two arrays leftSum and rightSum where:
+
+leftSum[i] is the sum of elements to the left of the index i in the array nums.
+If there is no such element, leftSum[i] = 0.
+
+rightSum[i] is the sum of elements to the right of the index i in the array nums.
+If there is no such element, rightSum[i] = 0.
+
+Return an integer array answer of size n where answer[i] = |leftSum[i] - rightSum[i]|.
+
+Example 1:
+
+Input: nums = [10,4,8,3]
+Output: [15,1,11,22]
+Explanation: The array leftSum is [0,10,14,22] and the array rightSum is [15,11,3,0].
+The array answer is [|0 - 15|,|10 - 11|,|14 - 3|,|22 - 0|] = [15,1,11,22].
+Example 2:
+
+Input: nums = [1]
+Output: [0]
+Explanation: The array leftSum is [0] and the array rightSum is [0].
+The array answer is [|0 - 0|] = [0].
+
+
+Constraints:
+
+1 <= nums.length <= 1000
+1 <= nums[i] <= 105
+"""
+
+def left_right_diffs(nums: list[int]) -> list[int]:
+    length = len(nums)
+    if length == 1: return [0]
+
+    left_sum = [0]
+    right_sum = [sum(nums[1:])]
+    p1, p2 = 0, 1
+
+    while p1 < length - 1 and p2 < length:
+        left_sum.append(left_sum[-1] + nums[p1])
+        right_sum.append(right_sum[-1] - nums[p2])
+        p1 += 1
+        p2 += 1
+
+    for i in range(length):
+        left_sum[i] = abs(left_sum[i] - right_sum[i])
+
+    return left_sum
+
+nums = list(map(int, input("Enter nums: ").split()))
+print(left_right_diffs(nums))
