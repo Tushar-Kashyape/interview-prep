@@ -1,0 +1,63 @@
+## DECORATORS:
+
+# Mechanics:
+
+. @dec above def f() = f = dec(f) — pure syntax sugar, nothing magic.
+. Standard shape: outer function receives func, inner wrapper(*args, **kwargs) receives
+call-time arguments, wrapper is what actually gets called each time.
+. *args, **kwargs in wrapper = works with any function signature, not just one.
+
+# functools.wraps:
+
+. Without it, the decorated function's __name__/__doc__ get silently overwritten to
+wrapper's — breaks debugging, introspection, tooling.
+. Always add @functools.wraps(func) directly above def wrapper(...). Non-negotiable
+in real code.
+
+# Closures — the core mechanism decorators run on:
+
+. A variable declared in the outer function (dec/memoize/count_calls) and used inside
+wrapper is read automatically via closure — no keyword needed.
+. To reassign (not just read) that outer variable from inside wrapper, you need
+nonlocal. Without it, Python treats the assignment as creating a new local variable
+and raises UnboundLocalError on first use.
+. Workaround without nonlocal: use a mutable container (list/dict) and mutate it
+(lst[0] += 1) — mutation doesn't require nonlocal, only reassignment of the name
+itself does.
+. Each separate @decorator application = one separate call to the outer decorator
+function = its own independent closure/state. Two functions decorated with the same
+decorator do not share state (proven earlier with slow_square/slow_double having
+separate cache dicts).
+    - Ex. The actual reason slow_square and slow_double have independent caches: each
+    @memoize application triggers a separate call to memoize(func), and each call
+    creates its own fresh cache = {} in its own closure — independent objects in memory,
+    nothing to do with stacks.
+. Closure state persists in memory as long as something still references the decorated
+function — it's not garbage collected just because the outer function has returned.
+
+# Decorators with arguments:
+
+. Needs 3 layers of nesting: retry(n) → returns decorator(func) → returns wrapper
+(*args, **kwargs). This is because n needs to be captured before func is even known.
+
+# Stacking:
+
+. @a @b above def f() applies bottom-up: f = a(b(f)). Order changes behavior — common
+"what does this print" trap.
+
+# Caching pattern (memoize):
+
+. Tuples are hashable/immutable → safe as dict keys.
+. args is already a tuple — no need to unpack or convert it for dict key use.
+. Real caching should also account for kwargs, not just args, for full correctness
+(didn't fully build this into memoize, worth remembering as a gap).
+
+# Validation pattern:
+
+. Loop over list(args) + list(kwargs.values()) to validate both positional and keyword
+inputs uniformly.
+. type(val) not in (int, float) — watch out: bool is technically a subclass of int
+in Python, type(True) == bool not int, so type-based checks can behave unexpectedly
+with booleans.
+. Python 3 raises TypeError on cross-type comparisons ("hello" <= 0) — no implicit
+ordering across unrelated types like there was in Python 2.
