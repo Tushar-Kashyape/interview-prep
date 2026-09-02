@@ -1,0 +1,72 @@
+## GENERATORS/ ITERATORS:
+
+# Iterable vs Iterator vs Generator
+
+. Iterable: has __iter__, can be looped over. Not all iterables are iterators (e.g. list).
+. Iterator: has both __iter__ (returns self) and __next__ (returns next value,
+raises StopIteration when done).
+. Generator: a function using yield — automatically satisfies the iterator protocol,
+no manual dunder methods needed.
+. Every generator is an iterator; every iterator is an iterable; not the reverse
+in either case.
+
+# for loop mechanism
+
+. for x in obj: = calls iter(obj) once, then calls next() repeatedly until StopIteration,
+which it catches silently.
+. list alone can't be passed to next() directly — must call iter(list) first to
+get an actual iterator object.
+
+# yield mechanics
+
+. Pauses execution at that exact line, returns control + value to caller.
+. Resumes from that exact point on next next()/.send() call — local state (variables,
+loop position) preserved between pauses.
+. yield is what prevents while True: from hanging — loop only advances one step
+per explicit resume call; never runs unattended.
+
+# .send() — two-way communication (advanced, rarely tested)
+
+. x = yield total — sent value becomes the result of the yield expression itself,
+not passed as a function argument.
+. next(gen) is equivalent to gen.send(None) — needed once to "prime" the generator
+to its first yield.
+. Not required deep-dive territory for interviews — good to understand conceptually,
+rarely coded live.
+
+# Generator expressions vs list comprehensions
+
+. (x for x in ...) = lazy, generator object, O(1) memory, computed on demand.
+. [x for x in ...] = eager, full list, O(n) memory, computed immediately.
+
+# Memory-efficiency — the real nuance (from chunked discussion)
+
+. A generator function only saves memory on its output if consumed lazily — it does
+NOT retroactively make an already-eager input lazy.
+. lst[i:i+n]-based generator still requires the full input list to already exist
+in memory — partial laziness only.
+. True end-to-end memory efficiency requires the entire pipeline to be lazy, starting
+from the source (file line-by-line, paginated API, generator-based counter) — not just
+one function in the middle.
+. For small/fixed inputs, this optimization is irrelevant — it only matters at scale
+(huge/unbounded data).
+
+# Slicing vs indexing (from chunked)
+
+. Single-index out-of-bounds (lst[15] on a 10-element list) → raises IndexError.
+. Slice out-of-bounds (lst[8:15]) → silently clamps to available range, no error —
+this is why lst[i:i+n] naturally handles a shorter final chunk with zero extra logic.
+
+# Class-based iterator (manual protocol)
+
+. __iter__ returns self; __next__ returns next value or raises StopIteration.
+. This is the general/manual technique; yield is the shortcut that generates this
+boilerplate automatically.
+. Deferred: writing one cold, standalone — moved to OOP round (needs self/classes
+properly covered first).
+
+# Cross-topic links still owed (tracked in memory)
+
+. Class-based iterator cold-solve → OOP round.
+. Decorating a generator function specifically (decorator wraps generator-object
+creation, not each yield) → no slot assigned yet, revisit once both Decorators and Generators context available.

@@ -18,6 +18,11 @@ arguments (*args) from user. **kwargs also can be accepted from user.
 
 args = input().split()
 f(*args, **kwargs)
+
+NOTE: any parameter after *args in a signature becomes keyword-only — it can never 
+be filled positionally, and if it has no default value, it becomes required-keyword-only, 
+meaning the caller must explicitly pass it by name (f(1, 2, 3, b=5)), no matter how 
+many positional arguments they supply.
 """
 
 def track_events(event_name: str, *details, **metadata_tags) -> dict:
