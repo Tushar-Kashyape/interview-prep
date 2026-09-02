@@ -1,0 +1,56 @@
+## LAMBDAS:
+
+# Mechanics
+
+. lambda args: expression — single expression only, no statements, no multi-line
+body, implicit return.
+. Equivalent to a restricted def — expression, not a statement, so usable inline
+(passed directly as an argument, assigned, etc.).
+. Ternary/conditional expressions allowed: lambda a, b: a if a > b else b.
+. Multiple args, default args supported: lambda x, y=10: x + y.
+
+# Primary real-world use — key=
+
+. Overwhelming majority of lambda usage in practice: sorted(), max(), min() custom
+keys.
+. Tuple key = priority order — first element is primary sort criterion, later elements
+are tiebreakers only.
+. Swapping tuple field order changes sort priority entirely.
+
+# Sort stability (separate guarantee, not derived from the key)
+
+. Stable sort = ties (equal key values) never change relative order from original input.
+. reverse=True/False controls direction only — does not affect tie handling; stability
+holds regardless.
+. Python's sorted()/.sort() = Timsort, guaranteed stable, documented behavior.
+. Enables reliable multi-pass sorts (sort by lowest-priority key first, then
+higher-priority key, relying on stability).
+. If NOT stable: tie order becomes fully undefined/unpredictable — no way to guess it.
+
+# Boolean-as-sort-key
+
+. bool is a subclass of int: False == 0, True == 1 — real numeric comparison, not hashing.
+. (bool_field, other_field) tuple key → reliably groups False before True, deliberate
+semantic guarantee.
+. Avoid faking this with strings ("yes"/"no", "true"/"false") — ordering then depends
+on lexicographic accident, not guaranteed logic (e.g. "false" < "true" could silently
+invert intended grouping).
+
+# filter() / map() with lambda
+
+. Both return lazy iterators (not lists) — yield elements one at a time on demand,
+not computed upfront.
+. list() needed to materialize into a concrete list (for printing/indexing/etc.) —
+otherwise you just get an iterator object reference.
+. Can nest directly: map(lambda x: x*x, filter(lambda x: cond, data)) — compact
+one-liner form.
+. List comprehensions are generally preferred over filter/map+lambda in modern Python
+for readability — but both are valid and appear in interviews.
+
+# Closures (shared mechanics with decorators — already covered there)
+
+. Lambdas close over enclosing variables exactly like any function.
+. Late-binding loop gotcha: [lambda: i for i in range(3)] → all lambdas share the
+same i, which ends at its final loop value → [2,2,2] not [0,1,2].
+. Fix: lambda i=i: i — default arg values are evaluated at definition time
+(not call time), baking in the current value per-lambda independently.
