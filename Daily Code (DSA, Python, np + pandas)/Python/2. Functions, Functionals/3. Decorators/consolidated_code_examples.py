@@ -1,8 +1,5 @@
 import functools
 
-from sqlalchemy.util import decorator
-
-
 # BASIC DECORATOR:
 
 def logger(func):
