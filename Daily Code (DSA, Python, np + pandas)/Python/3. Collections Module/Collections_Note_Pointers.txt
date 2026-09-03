@@ -1,0 +1,74 @@
+## collections module
+
+# Counter
+
+. dict subclass for counting hashable items; Counter(iterable) auto-tallies.
+. Missing keys return 0, no KeyError (unlike plain dict).
+. .most_common(n) — top-n by frequency; uses heapq.nlargest internally for small
+n, not full sort.
+. Arithmetic: +, -, &, | between two Counters.
+. Subtraction is not symmetric — drops zero/negative results (Counter({'a':1}) -
+Counter({'a':5}) → empty, not {'a':-4}).
+. Counter(messages) on a list of tuples counts whole tuples as keys — must extract
+the specific field first (Counter(m[0] for m in messages)) to count by that field.
+. Ties in .most_common() broken by insertion order (dict is order-preserving since
+3.7+, sort is stable) — deterministic, not arbitrary.
+
+# defaultdict
+
+. dict subclass; missing-key access auto-creates via factory function (list, int, set),
+through dunder hook __missing__.
+. Eliminates if key not in d: d[key] = [] boilerplate.
+. Gotcha: .get(key) does NOT trigger auto-creation (safe, returns None).
+d[key] DOES trigger creation — even on accidental/debug reads, silently polluting
+the dict.
+
+# deque
+
+. Double-ended queue — O(1) append, appendleft, pop, popleft (both ends).
+. Contrast list: front operations (insert(0,x), pop(0)) are O(n) — every element
+shifts/reindexes.
+. Internally: doubly-linked list of fixed-size blocks (hybrid — not plain array,
+not naive node-linked-list) — O(1) both-end ops + decent memory locality.
+. Canonical use: BFS, sliding window, real queue implementations.
+. Sliding window pattern: maintain window via deque (O(1) evict/add) + maintain a
+running total (O(1) update: subtract evicted, add new) — two SEPARATE optimizations
+\targeting two different operations (window maintenance vs. sum calculation),
+not one combined thing.
+
+. Complexity distinction: O(1) per step × n steps = O(n) total — O(n) refers to
+cumulative work across the full run, not the cost of any single operation. If either
+optimization were missing (e.g. list.pop(0) instead of deque.popleft()), total degrades
+to O(n·k).
+
+# namedtuple
+
+. Generates an actual class at runtime (via type()), subclassing tuple.
+. Access by .field name or index — still a real tuple: immutable, hashable, unpackable,
+slice-able.
+. isinstance(p, tuple) → True.
+. Lighter than a full class, more self-documenting than a raw tuple.
+
+# OrderedDict
+
+. Pre-3.7: guaranteed insertion order when plain dict didn't. Since 3.7+, plain dict
+also preserves insertion order — OrderedDict is largely legacy now.
+. Two things still distinguish it: order-sensitive equality (OrderedDict with same
+pairs, different order → !=; plain dict same case → ==), and .move_to_end(key).
+. popitem(last=True) (default) -> removes from end (LIFO/stack-style).
+popitem(last=False) -> removes from front (FIFO-style).
+. LRU cache pattern: move_to_end(key) on every access/update pushes recently-used
+items to the end → end = most recently used, front = least recently used →
+evict via popitem(last=False) to remove the least recently used correctly.
+. New-key assignment (od[new_key] = val) auto-places at the end already —
+an extra move_to_end() right after is redundant (not wrong, just unnecessary).
+
+Round summary (3 problems, all correct/cold)
+
+. Counter+defaultdict combined (chat analytics) — clean cold solve, strong cross-topic
+articulation (laziness from Generators, stability from Lambdas).
+. OrderedDict-based LRU cache — checkpointed cleanly across __init__/get/put, one
+honest gap on popitem(last=False) mechanics, resolved.
+. deque-based sliding window — clean cold solve, needed correction disentangling
+running-total optimization from deque optimization, then nailed the follow-up on
+what happens if only one optimization is applied.
