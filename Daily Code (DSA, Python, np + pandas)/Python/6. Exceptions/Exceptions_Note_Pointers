@@ -1,0 +1,75 @@
+## Exceptions
+
+# Why Exception, not BaseException, is the catch-root
+
+. BaseException includes SystemExit/KeyboardInterrupt/GeneratorExit — control-flow
+"stop" signals, not bugs.
+. Catching broadly with Exception is safe; catching BaseException risks swallowing
+Ctrl+C/exit signals.
+
+# try/except/else/finally
+
+. Only try is mandatory; add except/else/finally only when they serve a real purpose.
+. else = runs only on success; keeps risky code separate from success-only code.
+. finally = always runs, even through a pending return/break/continue.
+. Execution order gotcha: a return inside try/except is held, finally runs first, then
+the held value returns.
+. Anti-pattern: return inside finally silently overrides pending returns AND silently
+swallows exceptions that were about to propagate — never put control-flow in finally.
+
+# Custom exceptions
+
+. Subclass Exception. super().__init__(message) sets the string representation (str(e))
+— skip it, str(e) shows a raw, unhelpful dump of constructor args instead.
+. Custom attributes (self.age = age) are independent of the message mechanism —
+plain instance-attribute assignment, same as any class; works whether or not
+super().__init__() was called.
+. repr() = debugging-oriented string (shows quotes/type); str() = human-readable.
+Same underlying mechanism as __repr__/__str__ dunders from OOP.
+
+# Exception chaining (raise X from Y)
+
+. Wraps a low-level error in a higher-level, more meaningful one for callers — without
+losing the original.
+. from e is Python-native raise syntax — automatically sets __cause__ = e; never
+assigned manually.
+. Purpose: caller shouldn't need to know implementation-detail exception types;
+original stays available via .__cause__ for deep debugging.
+. raise X from None exists to explicitly suppress chaining (flagged, not practiced
+this session).
+
+# Re-raising (raise alone) vs. alternatives
+
+. Returning an exception object as data = error-checking becomes optional/forgettable.
+. Swallowing (except: pass) = failure invisible to caller entirely.
+. Re-raise = do local work (log, cleanup) without hiding failure from caller —
+guarantees visibility unless explicitly caught later.
+. raise (no arg) preserves original traceback.
+
+# Exception hierarchy & multi-except ordering
+
+. Catching a parent class catches all its subclasses (except LookupError catches
+KeyError+IndexError; except AppError catches ValidationError+DatabaseError).
+. Hard rule: parent must come after its subclasses in except chain —
+general-before-specific makes the specific handler unreachable dead code.
+. Sibling exceptions (neither is subclass of the other) — order between them is
+arbitrary/style only, not a correctness rule. Only parent-vs-child ordering is
+mandatory.
+. Catch specifically near the error's origin (different failures need different
+responses); catch broadly (shared base) further up as a safety net — automatically
+covers future subclasses without maintenance.
+. except Exception: raise at the outer layer = distinguish "anticipated app error"
+from "genuinely unexpected bug" — don't paper over real bugs.
+. Bare except: (no exception type specified) catches everything, including
+SystemExit/KeyboardInterrupt — always catch specific types, or at minimum except
+Exception:, never a bare except:.
+
+# Session gaps encountered & resolved
+
+. Conflated "how the message is set" (super().__init__) with "how a custom attribute
+is set" (self.x = x) — resolved via follow-up, confirmed independent mechanisms,
+re-tested cleanly in the next problem.
+. Initial finally-vs-return sequencing said backwards ("return then finally") —
+corrected: finally always runs before the held return actually leaves.
+. Good self-driven question: sibling-exception ordering vs. parent-child ordering —
+correctly reasoned to be a real distinction, not something assumed from the general rule.
