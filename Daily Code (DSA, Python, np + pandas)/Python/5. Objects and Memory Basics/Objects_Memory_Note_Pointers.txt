@@ -1,0 +1,57 @@
+## Python Object & Memory Basics
+
+# References
+
+. Assignment (b = a) creates a reference to the same object, not a copy — mutating
+via one name affects the other.
+
+# is vs ==
+
+. == compares values. is compares object identity (same memory location).
+. Two separately created objects with identical values are == but not is.
+
+# Mutable vs Immutable
+
+. Immutable (str, tuple, int, frozenset) — any "modification" creates a new object.
+. Mutable (list, dict, set) — methods like .append() modify the same object in place.
+
+# Shallow vs Deep copy
+
+. .copy()/[:] — new outer container, but nested objects (inner lists/dicts) are still
+shared references. Mutating a nested element affects the "original" too.
+. copy.deepcopy() — fully independent copy, including all nested levels.
+
+# __eq__ — customizing equality
+
+. Default (object.__eq__) compares by identity, same as is.
+. Override __eq__ to compare by value instead (e.g. same x/y coordinates = "equal").
+
+# __hash__ — the contract with __eq__
+
+. Used by dicts/sets for O(1) bucketing/lookup.
+. Hard rule: if two objects are equal (__eq__ → True), they must have the same hash —
+violating this breaks dict/set correctness.
+. Critical gotcha: defining __eq__ without __hash__ → Python automatically sets
+__hash__ = None → object becomes unhashable (TypeError when used in a set/as a dict key). This is real, not hypothetical — must define both together.
+. Correct pattern: __hash__ based on the same fields used in __eq__ —
+e.g. hash((self.x, self.y)).
+. Default (no __eq__/__hash__ defined): __eq__ = identity-based,
+__hash__ = based on id() — internally consistent with each other, just not value-based.
+
+# Garbage Collection — reference counting
+
+. Primary mechanism: every object tracks its reference count; hits 0 → immediately
+deallocated.
+. sys.getrefcount(obj) inspects this (always shows one extra — the temporary reference
+from the function call itself).
+
+# Garbage Collection — cyclic references
+
+. Reference counting fails for cycles: A references B, B references A, nothing external
+references either — count never naturally hits 0, even though both are unreachable/
+garbage.
+. Python's cyclic garbage collector (gc module) periodically scans for and cleans
+up these unreachable cycles — a supplementary mechanism, not the primary one.
+. gc.collect() — manually trigger a collection cycle (rarely needed, runs automatically).
+. gc.disable()/gc.enable() — can turn off cyclic collection specifically (reference
+counting still works regardless) — niche performance-tuning knob, not everyday practice.

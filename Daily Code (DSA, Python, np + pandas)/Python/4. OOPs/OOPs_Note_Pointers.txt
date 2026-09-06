@@ -1,0 +1,91 @@
+## OOP — (Inheritance → MRO, plus extensions)
+
+# Inheritance
+
+. class Dog(Animal) — child inherits all attributes/methods automatically.
+. Child not defining __init__ at all → parent's __init__ used automatically, no extra
+code needed.
+
+# super()
+
+. Returns a proxy to call parent-class methods, following MRO (not just "direct parent")
+— matters in multiple inheritance.
+. Most common: super().__init__(...) — avoids duplicating parent's setup logic; stays
+correct if parent logic changes later.
+. Not required — skip it, and parent's __init__ simply never runs (its setup silently
+doesn't happen unless manually replicated).
+. Works for any method, not just __init__.
+. Python 3 syntax is super() (no args) — Python 2 needed super(ClassName, self),
+legacy-only now.
+
+# Method overriding
+
+. Child redefines a method with the same name — child's version runs on child instances.
+. super().method_name() inside an override = extend parent behavior. Fully redefining
+without calling super = replace it.
+
+# Polymorphism
+
+. Does NOT require inheritance — Python checks "does this object have the method right
+now" (duck typing), not "is this object officially related via class hierarchy."
+. Duck with zero inheritance from Animal still works in for a in animals: a.speak()
+alongside actual Animal subclasses.
+. "Duck typing" name: "if it walks/quacks like a duck, it's a duck" — behavior over
+declared type. Contrasts with statically-typed languages needing explicit interfaces.
+. Failure mode: if an object lacks the method, it crashes with AttributeError at call
+time, not earlier (no compile-time interface check).
+
+# isinstance() vs type()
+
+. isinstance(obj, Cls) — respects inheritance, True for subclass instances too.
+. type(obj) == Cls — exact class only, ignores inheritance — common mistake, breaks
+polymorphic code.
+. Use isinstance() for polymorphic logic.
+
+# Encapsulation
+
+. No true "private" enforcement in Python — convention-based only.
+. self.name — public.
+. self._name — single underscore, "protected" convention, not enforced.
+. self.__name — double underscore, name-mangled to self._ClassName__name; harder to
+access accidentally, mainly avoids subclass naming collisions, not real security — still
+accessible via the mangled name directly.
+
+# MRO (Method Resolution Order)
+
+. Determines which method runs when multiple parents define the same method (multiple
+inheritance).
+. Uses C3 linearization, not naive depth-first.
+. Every class hierarchy ends in object — the root of all Python classes (implicit since
+Python 3); provides default __init__/__repr__/__eq__/__hash__ etc., which is why overriding
+these on custom classes is possible (you're overriding object's fallback).
+. Diamond inheritance gotcha: naive depth-first can incorrectly let a distant ancestor's
+method win over a closer parent's (visits grandparent via one branch before checking the other branch's parent). C3 guarantees: a class always appears before its own parents, AND declared parent order is preserved (Diamond(Left, Right) → Left checked before Right, both before shared Base).
+. Check via ClassName.__mro__.
+
+# Composition vs. Inheritance
+
+. Inheritance = "IS-A" (Dog IS-A Animal).
+. Composition = "HAS-A" (Car HAS-A Engine, held as an attribute, not inherited).
+. Trade-off: composition is generally preferred when the relationship isn't a true
+"is-a" — more flexible (swap composed object at runtime), avoids fragile/deep
+inheritance chains and diamond-complexity entirely.
+. Guidance: "favor composition over inheritance" — inheritance for genuine type
+hierarchies only.
+
+# Abstract Base Classes (abc module)
+
+. ABC + @abstractmethod — forces subclasses to implement specific methods.
+. Instantiating a class with unimplemented abstract methods → TypeError.
+. Real use: plugin systems, enforcing a contract across multiple implementations.
+
+# Linter/best-practice gotcha (@staticmethod suggestion)
+
+. A linter (e.g. PyCharm) suggesting @staticmethod is a generic heuristic — correct
+only about "this method body doesn't use self," blind to broader design intent.
+. If a method is meant to be polymorphically overridable and called uniformly across
+instances (like speak()), keep it as a regular instance method even if self is currently
+unused — converting to static undermines the polymorphism pattern's intent, even though
+it wouldn't technically break the specific example.
+. Trust the linter for genuine dead-self cleanup; override it when it conflicts with an
+intentional design pattern.

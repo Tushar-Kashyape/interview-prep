@@ -1,0 +1,88 @@
+## Context Managers
+
+# Core purpose
+
+. Guarantees setup + teardown code runs around a block, regardless of exception —
+same problem try/finally solves, but reusable/bundled into an object instead of
+handwritten at every call site.
+
+# The protocol
+
+. __enter__(self) — runs on entering with; return value binds to the as variable
+(if used).
+. __exit__(self, exc_type, exc_value, traceback) — runs on leaving the block, always,
+exception or not.
+
+# What "with" desugars to
+
+    python
+    x = obj.__enter__()
+    try:
+        body()
+    finally:
+        obj.__exit__(exc_type, exc_value, traceback)
+
+. Mapping to manual try/except/finally: __enter__ = setup before try.
+with-body = try. __exit__'s exception-handling logic = except. __exit__ running
+unconditionally = finally.
+
+# __exit__'s exc_type/exc_value/traceback parameters
+
+. Populated automatically by Python only when an exception occurred inside the with
+block.
+. exc_type — the exception's class (not instance).
+. exc_value — the actual exception instance (same object as e in except X as e).
+. traceback — traceback object, where the exception occurred.
+. If block exits normally (no exception) — all three are None.
+. Lets __exit__ make decisions based on which exception occurred (e.g. suppress only
+ValueError, let others propagate) — same "catch specific vs broad" decision-making as
+multi-except ordering, just expressed via parameters instead of clauses.
+
+# Exception suppression via __exit__'s return value
+
+. Return truthy (e.g. True) → exception is suppressed, doesn't propagate further.
+. Return falsy (False, None, or no explicit return at all — implicit None) → exception
+propagates normally after __exit__ runs.
+. return False and no return statement at all behave identically (both falsy) — explicit
+return False is purely for reader clarity/intent, not functionally required.
+. Gotcha: accidentally returning True silently swallows real bugs.
+
+# contextlib.contextmanager — generator-based, less boilerplate
+
+. @contextmanager decorator lets you write a context manager as a generator function.
+. Code before yield = acts as __enter__. Code after yield = acts as __exit__.
+. When an exception occurs inside the with block, Python throws it into the generator
+at the paused yield line — as if yield itself raised it.
+. Exception suppression here follows the exact same rule as plain try/except: if the
+generator's except block catches it and does not raise again, the exception is done —
+code after with continues normally (equivalent to __exit__ returning True). If the
+except block does raise again, the exception keeps propagating and must be caught
+elsewhere (equivalent to __exit__ returning False/None).
+. This is not a new/different rule — it is identical to ordinary try/except behavior
+(verified via direct side-by-side trace: catching without re-raise → code after
+continues; catching with re-raise → exception escapes and must be caught outside).
+
+# Canonical real-world example
+
+. with open("file.txt") as f: — open() returns an object implementing the protocol;
+__enter__ returns the file object itself, __exit__ closes it automatically even if
+reading/writing raises mid-block. Exactly why with open(...) is always preferred
+over manual open()/close().
+
+# Why context managers over plain functions with try/except/finally
+
+. Not fundamentally about avoiding duplication (a shared function also does that) —
+it's about decoupling the safety-wrapper logic from the specific code being wrapped.
+. A single context manager class/generator can wrap any arbitrary block of code placed
+inside with X(): — no need for a separate function per use case, no need to pass
+"risky code" in as a callback/lambda.
+. Additional advantage: multiple context managers can stack/nest cleanly (with X()
+as x, Y() as y:) — awkward to replicate with plain functions.
+
+# Session gap encountered & resolved
+
+. Initial confusion: whether @contextmanager's exception-suppression-via-no-reraise
+was some special new mechanism — resolved by tracing it back to the exact same plain
+try/except rule already known from the Exceptions topic (catch without re-raise =
+handled; catch with re-raise = continues propagating). No new rule, just the same
+rule appearing in a generator context.
